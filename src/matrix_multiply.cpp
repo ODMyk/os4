@@ -56,14 +56,14 @@ void matrixMultiply(const vector<vector<int>>& A, const vector<vector<int>>& B, 
     cout << "Time: " << duration_cast<microseconds>(end - start).count() << " μs" << endl;
 }
 
-void testPerformance(int n, int m, int k) {
+void testPerformance(int n, int m, int k, int max_threads) {
     cout << "Generating matrices...\n" << endl;
     auto A = create_random_matrix(n, m);
     auto B = create_random_matrix(m, k);
 
     cout << "Running tests:" << endl;
 
-    for (int threads = 1; threads <= 16; threads *= 2) {
+    for (int threads = 1; threads <= max_threads; threads *= 2) {
         cout << "\nThreads: " << threads << endl;
         matrixMultiply(A, B, threads);
     }

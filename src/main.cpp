@@ -11,7 +11,7 @@ constexpr int SYNC_VALUE = 1000000;
 
 int main() {
     std::cout << "\n--- 1. Matrix Multiplication with Parallelism ---\n";
-    testPerformance(N, M, K);
+    testPerformance(N, M, K, 16);
 
     std::cout << "\n--- 2. Race Condition Test ---\n";
     testRaceCondition();
