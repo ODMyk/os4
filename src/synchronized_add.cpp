@@ -40,6 +40,14 @@ void synchronizedAdd(int maxVal, unsigned thread_count) {
     auto end = std::chrono::high_resolution_clock::now();
 
     std::cout << "Synchronized add with " << thread_count << " threads: " << counter << " (expected: " << maxVal << ")" << std::endl;
-    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " μs" << std::endl;
+    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+}
 
+void testSynchronizedAdd(int maxVal, unsigned thread_count) {
+    for (int i = 1; i <= thread_count; i *= 2) {
+        synchronizedAdd(maxVal, i);
+        if (i < thread_count) {
+            std::cout << std::endl;
+        }
+    }
 }

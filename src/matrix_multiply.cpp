@@ -22,10 +22,8 @@ void multiplyElement(const vector<vector<int>>& A, const vector<vector<int>>& B,
     cout << "[" << i << "," << j << "] = " << sum << endl;
 }
 
-void matrixMultiply(int n, int m, int k, int numThreads) {
+auto create_random_matrix(int n, int m) {
     vector<vector<int>> A(n, vector<int>(m));
-    vector<vector<int>> B(m, vector<int>(k));
-    vector<vector<int>> C(n, vector<int>(k, 0));
 
     random_device rd;
     mt19937 gen(rd());
@@ -33,17 +31,20 @@ void matrixMultiply(int n, int m, int k, int numThreads) {
     for (auto& row : A)
         for (auto& val : row)
             val = dist(gen);
-    for (auto& row : B)
-        for (auto& val : row)
-            val = dist(gen);
 
+    return A;
+}
+
+void matrixMultiply(const vector<vector<int>>& A, const vector<vector<int>>& B, int numThreads) {
+    int n = A.size(), m = A[0].size(), k = B[0].size();
     vector<thread> threads;
+    vector<vector<int>> result(n, vector<int>(k, 0));
     auto start = high_resolution_clock::now();
 
     int created = 0;
     for (int i = 0; i < n && created < numThreads; ++i) {
         for (int j = 0; j < k && created < numThreads; ++j) {
-            threads.emplace_back(multiplyElement, cref(A), cref(B), ref(C), i, j, m);
+            threads.emplace_back(multiplyElement, cref(A), cref(B), ref(result), i, j, m);
             created++;
         }
     }
@@ -56,8 +57,15 @@ void matrixMultiply(int n, int m, int k, int numThreads) {
 }
 
 void testPerformance(int n, int m, int k) {
+    cout << "Generating matrices...\n" << endl;
+    auto A = create_random_matrix(n, m);
+    auto B = create_random_matrix(m, k);
+
+    cout << "Running tests:" << endl;
+
     for (int threads = 1; threads <= 16; threads *= 2) {
         cout << "\nThreads: " << threads << endl;
-        matrixMultiply(n, m, k, threads);
+        matrixMultiply(A, B, threads);
     }
 }
+

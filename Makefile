@@ -9,9 +9,9 @@ CXXFLAGS = -std=c++17 -O0 -pthread
 
 TARGET = $(OUT_DIR)/main
 
-all: $(TARGET)
+all: main
 
-$(TARGET): $(SRC) $(HDR)
+main: $(SRC) $(HDR)
 	@mkdir -p $(OUT_DIR)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
 
